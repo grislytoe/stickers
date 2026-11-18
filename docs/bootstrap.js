@@ -8,7 +8,7 @@
     if(!file||state.busy)return;
     state.file=file;
     message(`Открываем «${file.name}»…`);
-    if(state.handler)state.handler(file);
+    if(state.handler){state.delivered=file;state.handler(file);}
   }
   window.addEventListener('dragover',event=>{event.preventDefault();if(event.dataTransfer)event.dataTransfer.dropEffect=state.busy?'none':'copy';},{capture:true,passive:false});
   window.addEventListener('drop',event=>{
@@ -40,7 +40,7 @@
       await import('./app.js?v=3');
       const restored=await Promise.race([pendingFile('take').catch(()=>null),new Promise(resolve=>setTimeout(()=>resolve(null),2000))]);
       if(restored&&!state.file)state.file=restored;
-      if(state.file&&!state.busy)state.handler?.(state.file);
+      if(state.file&&!state.busy&&state.delivered!==state.file){state.delivered=state.file;state.handler?.(state.file);}
     }catch(error){console.error(error);message('Не удалось загрузить редактор. Обновите страницу или откройте ссылку в обычном браузере.',true);}
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
