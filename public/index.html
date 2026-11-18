@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="ru">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Sticker Studio — видео в стикер</title><link rel="stylesheet" href="/style.css"></head>
+<body>
+<header><a class="brand" href="/" aria-label="Sticker Studio"><span class="logo">S<span>✦</span></span>sticker<span class="light">studio</span></a><span class="local"><i></i> Работает на вашем компьютере</span></header>
+<main>
+<div class="heading"><div><div class="eyebrow">МАЛЕНЬКОЕ ВИДЕО. БОЛЬШЕ ЭМОЦИЙ.</div><h1>Из видео — в стикер<span>.</span></h1><p>Выберите момент. Задайте форму. Всё остальное мы сделаем.</p></div><span class="telegram">↗ ДЛЯ TELEGRAM</span></div>
+<section class="workspace">
+<div class="editor">
+<div class="panel-head"><span><span class="step">01</span> Ваше видео</span><button id="replace" class="text-button" hidden>Заменить видео ↗</button></div>
+<input type="file" id="file" accept="video/*,.mkv,.mov,.webm,.avi" hidden>
+<button id="drop" class="drop"><span class="upload-icon">↥</span><strong>Перетащите видео сюда</strong><span>или нажмите, чтобы выбрать файл</span><small>MP4, MOV, WEBM и другие · до 250 МБ · до 10 мин</small></button>
+<div id="stage" class="stage" hidden><div id="video-frame"><video id="video" muted playsinline preload="auto"></video></div><button id="play" class="play" aria-label="Воспроизвести">▶</button><span class="preview-tag">ПРЕДПРОСМОТР</span></div>
+<div id="timeline-panel" class="timeline-panel" hidden>
+<div class="time-heading"><span>Выберите нужный момент</span><span id="duration-badge" class="badge">3,00 с / 3 с</span></div>
+<div id="timeline" class="timeline"><div id="thumbs" class="thumbs"></div><div id="selection" class="selection"><button id="handle-start" class="handle left" aria-label="Начало отрезка" role="slider" tabindex="0">Ⅱ</button><button id="handle-end" class="handle right" aria-label="Конец отрезка" role="slider" tabindex="0">Ⅱ</button></div><div id="playhead" class="playhead"></div></div>
+<div class="time-labels"><span>0:00</span><span id="total-time">0:00</span></div>
+<div class="time-inputs"><label>Начало <input id="start" type="number" min="0" step="0.01" value="0"><span>с</span></label><span class="time-arrow">→</span><label>Конец <input id="end" type="number" min="0.1" step="0.01" value="3"><span>с</span></label><button id="preview" class="text-button">↻ Смотреть отрезок</button></div>
+<p class="hint">Потяните края рамки или сдвиньте весь отрезок. Максимум — 3 секунды.</p>
+</div>
+<div id="empty-footer" class="empty-footer"><span>✦</span> Тот самый момент заслуживает своего стикера.</div>
+</div>
+<aside>
+<div class="settings"><div class="panel-head"><span><span class="step">02</span> Настройки стикера</span></div><div class="settings-body"><label class="field-label">Форма</label><div class="shape-options"><button id="original" class="shape active" aria-pressed="true"><span class="shape-icon rectangle"></span><strong>Оригинал</strong><small>Сохранить пропорции</small></button><button id="circle" class="shape" aria-pressed="false"><span class="shape-icon round"></span><strong>Круг</strong><small>Для видеосообщений</small></button></div><p id="shape-note" class="hint">Видео целиком, без обрезки по краям.</p><div class="divider"></div><div class="auto-heading">Подготовим автоматически <span>✦</span></div><ul class="specs"><li><span>Формат</span><b>WEBM · VP9</b></li><li><span>Разрешение</span><b>до 512 × 512</b></li><li><span>Размер файла</span><b>≤ 256 КБ</b></li><li><span>Длительность</span><b>≤ 3 секунды</b></li><li><span>Звук</span><b>Без звука</b></li></ul><button id="export" class="primary" disabled>Создать стикер <span>↗</span></button><p class="privacy">Никаких загрузок в облако.<br>Ваши видео остаются у вас.</p></div></div>
+<div class="tip"><span>↗</span><p><strong>Из кружочка — в стикерпак</strong>Включите «Круг», чтобы убрать углы. Область за кругом станет прозрачной.</p></div>
+</aside>
+</section>
+<div id="status" role="status" aria-live="polite" hidden></div>
+<section id="result" class="result" hidden><div class="result-check">✓</div><div><h2>Стикер готов к Telegram</h2><p id="result-info"></p><p class="hint">Отправьте файл боту <a href="https://t.me/Stickers" target="_blank" rel="noreferrer">@Stickers</a> как документ и следуйте его инструкциям.</p></div><a id="download" class="primary" download="telegram-sticker.webm">Сохранить .webm ↓</a></section>
+<footer><span>Сделано для ваших лучших реакций.</span><span>Локально. Просто. Без лишнего.</span></footer>
+</main><script type="module" src="/app.js"></script>
+</body></html>

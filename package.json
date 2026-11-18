@@ -1,0 +1,8 @@
+{
+  "name": "telegram-sticker-studio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Локальный видеоредактор стикеров Telegram",
+  "scripts": { "start": "node server.mjs", "setup": "node scripts/setup.mjs", "test": "node --test" },
+  "engines": { "node": ">=22" }
+}

@@ -1,0 +1,13 @@
+import { mkdir, writeFile, chmod } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
+const names = { 'win32-x64': 'ffmpeg-win32-x64', 'linux-x64': 'ffmpeg-linux-x64', 'darwin-x64': 'ffmpeg-darwin-x64', 'darwin-arm64': 'ffmpeg-darwin-arm64' };
+const name = names[`${process.platform}-${process.arch}`];
+if (!name) throw new Error('Установите FFmpeg вручную и задайте переменную FFMPEG_PATH.');
+console.log('Загрузка FFmpeg 6.1.1 (только при первой установке)…');
+const response = await fetch(`https://github.com/eugeneware/ffmpeg-static/releases/download/b6.1.1/${name}`);
+if (!response.ok) throw new Error(`Ошибка загрузки: ${response.status}`);
+const target = fileURLToPath(new URL(`../bin/ffmpeg${process.platform === 'win32' ? '.exe' : ''}`, import.meta.url));
+await mkdir(new URL('../bin/', import.meta.url), { recursive: true });
+await writeFile(target, Buffer.from(await response.arrayBuffer()));
+await chmod(target, 0o755);
+console.log('Готово. Запустите node server.mjs');
