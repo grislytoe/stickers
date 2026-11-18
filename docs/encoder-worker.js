@@ -3,14 +3,14 @@ importScripts('./vendor/ffmpeg-core.js');
 let core, log = '', complete;
 async function load() {
   if (!core) {
-    const coreURL = new URL('./vendor/ffmpeg-core.js', self.location.href).href;
+    const coreURL = new URL('./vendor/ffmpeg-core.js?v=3', self.location.href).href;
     const logger=message=>{log=(log+'\n'+message).slice(-20000);if(message==='FFMPEG_END')complete?.();};
-    core = await createFFmpegCore({ mainScriptUrlOrBlob:coreURL, locateFile:name=>new URL(`./vendor/${name}`,self.location.href).href, print:logger, printErr:logger });
+    core = await createFFmpegCore({ INITIAL_MEMORY:256*1024*1024, mainScriptUrlOrBlob:coreURL, locateFile:name=>new URL(`./vendor/${name}?v=3`,self.location.href).href, print:logger, printErr:logger });
   }
 }
 async function exec(args, allowFailure = false) {
   log = '';
-  const argv=['./ffmpeg','-nostdin','-y','-hide_banner',...args],allocations=[];
+  const argv=['./ffmpeg','-nostdin','-y','-hide_banner','-threads','1','-filter_threads','1',...args],allocations=[];
   const ptr=core._malloc(argv.length*4);allocations.push(ptr);
   argv.forEach((arg,index)=>{const length=core.lengthBytesUTF8(arg)+1;const value=core._malloc(length);allocations.push(value);core.stringToUTF8(arg,value,length);core.setValue(ptr+index*4,value,'i32');});
   try{

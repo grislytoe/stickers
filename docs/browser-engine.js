@@ -8,7 +8,7 @@ export class BrowserEngine {
   call(type,data,transfer=[]) {
     if(typeof SharedArrayBuffer==='undefined') return Promise.reject(new Error('Видеодвижок ещё не готов. Обновите страницу. Если ошибка повторится, откройте ссылку в обычном современном браузере вне мессенджера.'));
     if(!this.worker) {
-      this.worker=new Worker(new URL('./encoder-worker.js',import.meta.url));
+      this.worker=new Worker(new URL('./encoder-worker.js?v=3',import.meta.url));
       this.worker.onmessage=({data})=>{
         const task=this.pending.get(data.id);if(!task)return;
         if(data.type==='progress') return this.onProgress?.(data);

@@ -1,6 +1,6 @@
 # FFmpeg WebAssembly
 
-Bundled files `ffmpeg-core.js`, `ffmpeg-core.wasm`, and `ffmpeg-core.worker.js` are the unmodified distribution of `@ffmpeg/core` version 0.11.0. This version is pinned because the tested 0.12.x builds crash while encoding VP9.
+Bundled files are from `@ffmpeg/core` version 0.11.0. This version is pinned because the tested 0.12.x builds crash while encoding VP9. The WASM memory import minimum has been lowered from 1 GiB to 128 MiB by `scripts/prepare-browser-core.mjs`; no instructions or maximum-memory limit are changed. The JavaScript and pthread worker are unmodified. The original package is linked below; the reproducible patch script is included in the repository.
 
 - Package: https://registry.npmjs.org/@ffmpeg/core/-/core-0.11.0.tgz
 - Corresponding sources, dependency revisions, patches and build scripts: https://github.com/ffmpegwasm/ffmpeg.wasm-core/tree/v0.11.0
