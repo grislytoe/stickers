@@ -3,12 +3,12 @@ const video = $('video');
 let source = null, start = 0, end = 3, circle = false, busy = false, loading = false;
 const dec = value => value.toFixed(2).replace('.', ',');
 function status(message, error = false) { $('status').hidden = !message; $('status').textContent = message; $('status').className = error ? 'error' : ''; }
-function setBusy(value) { busy = value; $('export').disabled = value || !source; $('replace').disabled = value; $('drop').disabled = value; }
+function setBusy(value) { busy = value; $('export').disabled = value || !source; for(const id of ['replace','drop','start','end','circle','original']) $(id).disabled = value; }
 async function api(url, options) { const response = await fetch(url, options); const data = await response.json(); if (!response.ok) throw new Error(data.error || 'Ошибка обработки'); return data; }
 function invalidate() { $('result').hidden = true; }
-function update(seek = false) {
-  $('start').value = start.toFixed(2); $('end').value = end.toFixed(2);
-  $('start').max = Math.max(0, end-.1); $('end').max = Math.min(source.duration, start+3);
+function update(seek = false, preserveInputs = false) {
+  if(!preserveInputs) { $('start').value = start.toFixed(2); $('end').value = end.toFixed(2); }
+  $('start').max = Math.max(0, source.duration-.1); $('end').max = source.duration;
   $('selection').style.left = `${start/source.duration*100}%`;
   $('selection').style.width = `${(end-start)/source.duration*100}%`;
   $('duration-badge').textContent = `${dec(end-start)} с / 3 с`;
@@ -53,8 +53,10 @@ for (const name of ['dragleave','drop']) $('drop').addEventListener(name,event =
 window.addEventListener('dragover', event => event.preventDefault()); window.addEventListener('drop', event => event.preventDefault());
 function shape(value) { if (busy) return; circle=value; $('stage').classList.toggle('circle',circle); for(const [id, selected] of [['circle',circle],['original',!circle]]) { $(id).classList.toggle('active',selected); $(id).setAttribute('aria-pressed',String(selected)); } $('shape-note').textContent = circle ? 'Круг по центру видео. Углы станут прозрачными.' : 'Видео целиком, без обрезки по краям.'; invalidate(); }
 $('circle').onclick=()=>shape(true); $('original').onclick=()=>shape(false);
-$('start').onchange=()=>{ if(busy) return update(); const value=Number($('start').value); if(!Number.isFinite(value)) return update(); start=Math.max(0,Math.min(end-.1,value)); if(end-start>3) end=start+3; update(true); };
-$('end').onchange=()=>{ if(busy) return update(); const value=Number($('end').value); if(!Number.isFinite(value)) return update(); end=Math.min(source.duration,Math.max(start+.1,value)); if(end-start>3) start=end-3; update(true); };
+function changeStart(preserve=false){ if(busy) return; const value=$('start').valueAsNumber; if(!Number.isFinite(value)) return; const length=end-start; start=Math.max(0,Math.min(source.duration-.1,value)); if(start>=end-.1) end=Math.min(source.duration,start+length); if(end-start>3) end=start+3; update(true,preserve); }
+function changeEnd(preserve=false){ if(busy) return; const value=$('end').valueAsNumber; if(!Number.isFinite(value)) return; end=Math.min(source.duration,Math.max(start+.1,value)); if(end-start>3) start=end-3; update(true,preserve); }
+$('start').oninput=()=>changeStart(true); $('start').onchange=()=>changeStart();
+$('end').oninput=()=>changeEnd(true); $('end').onchange=()=>changeEnd();
 let drag = null;
 $('timeline').onpointerdown=event=>{
   if(!source || busy) return;
