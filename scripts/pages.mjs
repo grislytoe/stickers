@@ -5,6 +5,11 @@ if (result.status !== 0) throw new Error('GitHub credential manager is unavailab
 const values = Object.fromEntries(result.stdout.trim().split('\n').map(line => { const at=line.indexOf('='); return [line.slice(0,at),line.slice(at+1)]; }));
 const headers = { Authorization: `Bearer ${values.password}`, Accept:'application/vnd.github+json', 'X-GitHub-Api-Version':'2022-11-28' };
 const endpoint='https://api.github.com/repos/grislytoe/stickers/pages';
+if(process.argv.includes('--build')) {
+  const response=await fetch(`${endpoint}/builds/latest`,{headers});const data=await response.json();
+  console.log(JSON.stringify({status:response.status,state:data.status,commit:data.commit,error:data.error,message:data.message}));
+  process.exit(response.ok?0:1);
+}
 let response=await fetch(endpoint,{headers});
 if(process.argv.includes('--enable')) {
   response=await fetch(endpoint,{method:response.status===404?'POST':'PUT',headers:{...headers,'Content-Type':'application/json'},body:JSON.stringify({source:{branch:'main',path:'/docs'},build_type:'legacy'})});
